@@ -1,4 +1,3 @@
-```markdown
 # Charchar's Web Chatbot
 
 A simple web-based chatbot application that allows users to interact with an AI chatbot. The frontend is built with React using Next.js, while the backend is powered by FastAPI. The chatbot connects to OpenAI's API for generating responses.
