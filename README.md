@@ -138,7 +138,7 @@ By default, the frontend will run at `http://localhost:3000`.
 ### **Backend**
 - FastAPI
 - Uvicorn
-- OpenAI Python SDK
+- OpenAI
 
 ### **Frontend**
 - React
@@ -146,21 +146,9 @@ By default, the frontend will run at `http://localhost:3000`.
 
 ---
 
-## License
-
-This project is licensed under the MIT License.
-
----
-
 ## Author
 
-- **Charchar** - [Your GitHub Profile](https://github.com/your-username)
+- **Charlottecool** - [Your GitHub Profile](https://github.com/Charlottecool)
 
 Feel free to open issues or submit pull requests for improvements!
 ```
-
-### **Customization**
-1. Replace `https://github.com/your-username/your-repo.git` with the actual repository URL.
-2. Update the author section with your name and GitHub profile link.
-
-If you'd like to add more sections or customize further, let me know! 😊
