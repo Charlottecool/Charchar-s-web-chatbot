@@ -4,6 +4,7 @@ from openai import OpenAI
 import re 
 from fastapi import status
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import StreamingResponse
 
 app = FastAPI()
 client = OpenAI()
@@ -45,23 +46,28 @@ async def chat_with_gpt(message: Message):
     manager.add_message('user', message.content)
 
     try:
-        response = client.chat.completions.create(
-            model="gpt-4o",
-            messages=manager.history
-        )
-        reply = response.choices[0].message.content
-
-        # add user messaged to conversation history
-        manager.add_message("assistant", reply)
-        
-        return {"reply": reply}
+        async def stream_response():
+            collected_content = []
+            response = client.chat.completions.create(
+                model="gpt-4",
+                messages=manager.history,
+                stream=True
+            )
+            for chunk in response:
+                if chunk.choices[0].delta.content is not None:
+                    content = chunk.choices[0].delta.content
+                    collected_content.append(content)
+                    yield content
+            
+            # Store the complete response in history
+            manager.add_message("assistant", "".join(collected_content))
+            
+        return StreamingResponse(stream_response(), media_type="text/plain")
     
-    except (openai.error.Timeout, openai.error.ServiceUnavailableError) as e:
-        raise HTTPException(
-            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-            detail="OpenAI API is currently unavailable. Please try again later."
-        )
-
     except Exception as e:
+        if "timeout" in str(e).lower() or "service unavailable" in str(e).lower():
+            raise HTTPException(
+                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+                detail="OpenAI API is currently unavailable. Please try again later."
+            )
         raise HTTPException(status_code=500, detail=str(e))
-
