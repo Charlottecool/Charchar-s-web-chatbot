@@ -1,3 +1,4 @@
 .autoenv
 .autoleave
 __pycache__
+chatbot.db
